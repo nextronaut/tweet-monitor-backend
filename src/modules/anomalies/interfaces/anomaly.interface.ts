@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { Tweet } from 'src/modules/tweets/interfaces/tweet.interface';
 
 export interface Anomaly extends Document {
     platform: string;
@@ -12,3 +13,7 @@ export interface Anomaly extends Document {
     period: number;
   }
   
+  export interface AnomalyWithTweets {
+    anomaly: Anomaly;
+    tweets: Tweet[];
+  }

@@ -39,12 +39,10 @@ export class TweetsService {
     return this.tweetModel.findOne({platform: platform, platformId: platformId})
   }
 
-  async findDetectedTweets(platform: string, startDate: string, endDate: string): Promise<Tweet[]> {
-    console.log(startDate)
-    console.log('converted date:', new Date(startDate))
+  async findDetectedTweets(platform: string, startDate: Date, endDate: Date): Promise<Tweet[]> {
     return this.tweetModel.find({
       platform: platform,
-      createdAt: {$gte: new Date(startDate), $lte: new Date(endDate)}
+      createdAt: {$gte: startDate, $lte: endDate}
     });
   }
 }

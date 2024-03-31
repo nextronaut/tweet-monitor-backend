@@ -1,7 +1,7 @@
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Model } from "mongoose";
 import { CreateAnomalyDto } from "./dto/create-anomaly.dto";
-import { Anomaly } from "./interfaces/anomaly.interface";
+import { Anomaly, AnomalyWithTweets } from "./interfaces/anomaly.interface";
 import { MockDataService } from "src/utils/mock.service";
 import { TweetsService } from "../tweets/tweets.service";
 
@@ -46,9 +46,10 @@ export class AnomaliesService {
     return this.anomalyModel.find({platform:platform});
   }
 
-  async findOne(id: string): Promise<Anomaly> {
-    console.log('id: ', id)
-    return this.anomalyModel.findById(id);
+  async findOne(id: string): Promise<AnomalyWithTweets> {
+    const anomaly = await this.anomalyModel.findById(id);
+    const detectedTweets = await this.tweetsService.findDetectedTweets(anomaly.platform, anomaly.startDate, anomaly.endDate)
+    return {anomaly: anomaly, tweets: detectedTweets}
   }
 
   async findAll(): Promise<Anomaly[]> {
