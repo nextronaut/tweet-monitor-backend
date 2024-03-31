@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { AnomaliesService } from './anomalies.service';
 import { CreateAnomalyDto } from './dto/create-anomaly.dto';
 import { Anomaly } from './interfaces/anomaly.interface';
@@ -17,8 +17,13 @@ export class AnomaliesController {
     return this.anomaliesService.findAll();
   }
 
-  @Get(':platform')
+  @Get('platform/:platform')
   async findByPlatform(@Param('platform') platform: string): Promise<Anomaly[]> {
     return this.anomaliesService.findByPlatform(platform);
+  }
+
+  @Get(':id')
+  async findDetectedTweet(@Param('id') id: string,) : Promise<Anomaly> {
+    return this.anomaliesService.findOne(id);
   }
 }

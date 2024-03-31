@@ -22,11 +22,6 @@ export class TweetsController {
     return this.tweetsService.findDetectedTweet(platform, platformId)
   }
 
-  @Get('detected/tweets')
-  async findDetectedTweets(@Query('startDate') startDate: string, @Query('endDate') endDate: string) : Promise<Tweet[]> {
-    return this.tweetsService.findDetectedTweets(startDate, endDate)
-  }
-
   @Get(':platform')
   async findByPlatform(@Param('platform') platform: string): Promise<Tweet[]> {
     return this.tweetsService.findByPlatform(platform);

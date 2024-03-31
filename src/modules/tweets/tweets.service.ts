@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Tweet } from "./interfaces/tweet.interface";
 import { CreateTweetDto } from "./dto/create-tweet.dto";
@@ -11,7 +11,7 @@ export class TweetsService {
 
   constructor(
     private readonly mockDataService: MockDataService,
-    private readonly anomalyDetectService: AnomaliesService,
+    @Inject(forwardRef(() => AnomaliesService)) private readonly anomalyDetectService: AnomaliesService,
     @Inject("TWEET_MODEL") private readonly tweetModel: Model<Tweet>,
   ) {}
 
@@ -39,7 +39,12 @@ export class TweetsService {
     return this.tweetModel.findOne({platform: platform, platformId: platformId})
   }
 
-  async findDetectedTweets(startDate: string, endDate: string): Promise<Tweet[]> {
-    return this.tweetModel.find().exec();
+  async findDetectedTweets(platform: string, startDate: string, endDate: string): Promise<Tweet[]> {
+    console.log(startDate)
+    console.log('converted date:', new Date(startDate))
+    return this.tweetModel.find({
+      platform: platform,
+      createdAt: {$gte: new Date(startDate), $lte: new Date(endDate)}
+    });
   }
 }

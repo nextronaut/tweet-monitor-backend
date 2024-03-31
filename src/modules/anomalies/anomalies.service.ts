@@ -1,13 +1,15 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Model } from "mongoose";
 import { CreateAnomalyDto } from "./dto/create-anomaly.dto";
 import { Anomaly } from "./interfaces/anomaly.interface";
 import { MockDataService } from "src/utils/mock.service";
+import { TweetsService } from "../tweets/tweets.service";
 
 @Injectable()
 export class AnomaliesService {
   constructor(
     private readonly mockDataService: MockDataService,
+    @Inject(forwardRef(() => TweetsService)) private readonly tweetsService: TweetsService,
     @Inject("ANOMALY_MODEL") private readonly anomalyModel: Model<Anomaly>
   ) {}
 
@@ -42,6 +44,11 @@ export class AnomaliesService {
 
   async findByPlatform(platform: string): Promise<Anomaly[]> {
     return this.anomalyModel.find({platform:platform});
+  }
+
+  async findOne(id: string): Promise<Anomaly> {
+    console.log('id: ', id)
+    return this.anomalyModel.findById(id);
   }
 
   async findAll(): Promise<Anomaly[]> {
