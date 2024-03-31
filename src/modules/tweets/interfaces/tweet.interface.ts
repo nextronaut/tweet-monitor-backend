@@ -6,4 +6,5 @@ export class Tweet extends Document {
   readonly  content: string;
   readonly  createdAt: Date;
   readonly hashtags: string[];
+  archived: boolean;
 }

@@ -2,7 +2,7 @@ import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Tweet } from "./interfaces/tweet.interface";
 import { CreateTweetDto } from "./dto/create-tweet.dto";
-import { Interval } from "@nestjs/schedule";
+import { Cron, Interval } from "@nestjs/schedule";
 import { MockDataService } from "src/utils/mock.service";
 import { AnomaliesService } from "../anomalies/anomalies.service";
 
@@ -20,12 +20,31 @@ export class TweetsService {
     return createdTweet;
   }
 
-  // @Interval(10000)
+  @Interval(10000)
   monitoringTweets() {
-    const tweets = this.mockDataService.monitorHashtag('#favorite', 'youtube');
+    const tweets = this.mockDataService.monitorHashtag('#favorite', 'twitter');
     this.tweetModel.insertMany(tweets);
-    this.anomalyDetectService.analyze('youtube', tweets, 10000);
+    this.anomalyDetectService.analyze('twitter', tweets, 10000);
   }
+
+  @Cron("0 0 * * 0")
+  async archiveOldTweets() {
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+  
+    const oldTweets = await this.tweetModel.find({
+      archived: false,
+      createdAt: { $lt: twoWeeksAgo }
+    }).exec();
+  
+    const tweetIds = oldTweets.map((tweet) => tweet._id);
+
+    await this.tweetModel.updateMany(
+      { _id: { $in: tweetIds } },
+      { $set: { archived: true } }
+    ).exec();
+  }
+  
 
   async findAll(): Promise<Tweet[]> {
     return this.tweetModel.find().exec();
