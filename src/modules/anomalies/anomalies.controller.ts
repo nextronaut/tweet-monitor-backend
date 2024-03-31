@@ -14,10 +14,10 @@ export class AnomaliesController {
     return this.anomaliesService.create(createAnomalyDto);
   }
 
-  @Sse('sse')
-  sse(): Observable<MessageEvent> {
-    return interval(20000).pipe(
-      switchMap(() => this.anomaliesService.findLatest()),
+  @Sse('sse/:platform')
+  sse(@Param('platform') platform: string): Observable<MessageEvent> {
+    return interval(30000).pipe(
+      switchMap(() => this.anomaliesService.findLatest(platform)),
       map(anomalies => ({ data: { anomalies } }))
     );
   }

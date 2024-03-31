@@ -20,7 +20,7 @@ export class TweetsService {
     return createdTweet;
   }
 
-  @Interval(10000)
+  // @Interval(10000)
   monitoringTweets() {
     const tweets = this.mockDataService.monitorHashtag('#favorite', 'twitter');
     this.tweetModel.insertMany(tweets);
