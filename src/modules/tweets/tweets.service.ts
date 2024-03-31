@@ -44,7 +44,6 @@ export class TweetsService {
       { $set: { archived: true } }
     ).exec();
   }
-  
 
   async findAll(): Promise<Tweet[]> {
     return this.tweetModel.find().exec();
