@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Sse } from '@nestjs/common';
 import { AnomaliesService } from './anomalies.service';
 import { CreateAnomalyDto } from './dto/create-anomaly.dto';
 import { Anomaly, AnomalyWithTweets } from './interfaces/anomaly.interface';
+import { Observable, interval, map, switchMap } from 'rxjs';
+import { MessageEvent } from './interfaces/messageevent.interface';
 
 @Controller('api/anomalies')
 export class AnomaliesController {
@@ -10,6 +12,14 @@ export class AnomaliesController {
   @Post()
   async create(@Body() createAnomalyDto: CreateAnomalyDto) {
     return this.anomaliesService.create(createAnomalyDto);
+  }
+
+  @Sse('sse')
+  sse(): Observable<MessageEvent> {
+    return interval(10000).pipe(
+      switchMap(() => this.anomaliesService.findLatest()),
+      map(anomalies => ({ data: { anomalies } }))
+    );
   }
 
   @Get()

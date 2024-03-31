@@ -52,6 +52,10 @@ export class AnomaliesService {
     return {anomaly: anomaly, tweets: detectedTweets}
   }
 
+  async findLatest(): Promise<Anomaly[]> {
+    return this.anomalyModel.find().limit(10).exec();
+  }
+
   async findAll(): Promise<Anomaly[]> {
     return this.anomalyModel.find().exec();
   }
