@@ -57,6 +57,6 @@ export class AnomaliesService {
   }
 
   async findAll(): Promise<Anomaly[]> {
-    return this.anomalyModel.find().exec();
+    return this.anomalyModel.find().sort({ createdAt: -1 }).exec();
   }
 }
