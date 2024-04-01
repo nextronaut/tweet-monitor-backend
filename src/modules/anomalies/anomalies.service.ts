@@ -2,13 +2,13 @@ import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Model } from "mongoose";
 import { CreateAnomalyDto } from "./dto/create-anomaly.dto";
 import { Anomaly, AnomalyWithTweets } from "./interfaces/anomaly.interface";
-import { MockDataService } from "src/utils/mock.service";
+import { MockDataService } from "../../utils/mock.service";
 import { TweetsService } from "../tweets/tweets.service";
 
 @Injectable()
 export class AnomaliesService {
   constructor(
-    private readonly mockDataService: MockDataService,
+    @Inject(forwardRef(() => MockDataService)) private readonly mockDataService: MockDataService,
     @Inject(forwardRef(() => TweetsService)) private readonly tweetsService: TweetsService,
     @Inject("ANOMALY_MODEL") private readonly anomalyModel: Model<Anomaly>
   ) {}

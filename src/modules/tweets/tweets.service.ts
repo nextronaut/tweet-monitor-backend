@@ -3,14 +3,14 @@ import { Model } from "mongoose";
 import { Tweet } from "./interfaces/tweet.interface";
 import { CreateTweetDto } from "./dto/create-tweet.dto";
 import { Cron, Interval } from "@nestjs/schedule";
-import { MockDataService } from "src/utils/mock.service";
+import { MockDataService } from "../../utils/mock.service";
 import { AnomaliesService } from "../anomalies/anomalies.service";
 
 @Injectable()
 export class TweetsService {
 
   constructor(
-    private readonly mockDataService: MockDataService,
+    @Inject(forwardRef(() => MockDataService)) private readonly mockDataService: MockDataService,
     @Inject(forwardRef(() => AnomaliesService)) private readonly anomalyDetectService: AnomaliesService,
     @Inject("TWEET_MODEL") private readonly tweetModel: Model<Tweet>,
   ) {}

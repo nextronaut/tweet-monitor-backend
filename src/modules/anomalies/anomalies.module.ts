@@ -7,7 +7,7 @@ import { AnomaliesController } from './anomalies.controller';
 import { TweetsModule } from '../tweets/tweets.module';
 
 @Module({
-  imports: [DatabaseModule, UtilsModule, forwardRef(() => TweetsModule)],
+  imports: [DatabaseModule, forwardRef(() => UtilsModule), forwardRef(() => TweetsModule)],
   controllers: [AnomaliesController],
   providers: [AnomaliesService, ...anomaliesProvider],
   exports: [AnomaliesService]
