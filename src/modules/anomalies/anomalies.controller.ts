@@ -16,7 +16,7 @@ export class AnomaliesController {
 
   @Sse('sse/:platform')
   sse(@Param('platform') platform: string): Observable<MessageEvent> {
-    return interval(30000).pipe(
+    return interval(10000).pipe(
       switchMap(() => this.anomaliesService.findLatest(platform)),
       map(anomalies => ({ data: { anomalies } }))
     );

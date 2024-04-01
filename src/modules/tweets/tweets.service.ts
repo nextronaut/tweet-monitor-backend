@@ -20,11 +20,11 @@ export class TweetsService {
     return createdTweet;
   }
 
-  // @Interval(10000)
+  @Interval(10000)
   monitoringTweets() {
-    const tweets = this.mockDataService.monitorHashtag('#favorite', 'twitter');
+    const tweets = this.mockDataService.monitorHashtag('#favorite', 'youtube');
     this.tweetModel.insertMany(tweets);
-    this.anomalyDetectService.analyze('twitter', tweets, 10000);
+    this.anomalyDetectService.analyze('youtube', tweets, 10000);
   }
 
   @Cron("0 0 * * 0")

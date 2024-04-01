@@ -43,7 +43,7 @@ export class AnomaliesService {
   }
 
   async findByPlatform(platform: string): Promise<Anomaly[]> {
-    return this.anomalyModel.find({platform:platform});
+    return this.anomalyModel.find({platform:platform}).sort({ createdAt: -1 }).exec();
   }
 
   async findOne(id: string): Promise<AnomalyWithTweets> {
@@ -53,7 +53,7 @@ export class AnomaliesService {
   }
 
   async findLatest(platform: string): Promise<Anomaly[]> {
-    return this.anomalyModel.find({platform: platform}).limit(10).exec();
+    return this.anomalyModel.find({platform: platform}).sort({createdAt: -1}).limit(10).exec();
   }
 
   async findAll(): Promise<Anomaly[]> {
