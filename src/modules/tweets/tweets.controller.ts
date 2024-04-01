@@ -8,7 +8,7 @@ export class TweetsController {
   constructor(private readonly tweetsService: TweetsService) {}
 
   @Post()
-  async create(@Body() createTweetDto: CreateTweetDto) {
+  async create(@Body() createTweetDto: CreateTweetDto): Promise<Tweet> {
     return this.tweetsService.create(createTweetDto);
   }
 
